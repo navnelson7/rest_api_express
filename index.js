@@ -10,8 +10,11 @@ const PORT = process.env.PORT || 4000;
 conectarDB();
 //definir la pagina principal
 app.get('/', (req, res)=>{
-    res.send('hola mundo')
+    res.send('hola mundo express')
 });
+
+//importar las rutas
+app.use('/api/usuarios', require('./routes/usuarios'));
 
 //arrancar la app
 app.listen(PORT, () =>{
