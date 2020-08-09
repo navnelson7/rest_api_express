@@ -2,20 +2,20 @@ const mongoose = require('mongoose');
 const { stringify } = require('querystring');
 const UsuariosSchema = mongoose.Schema({
     nombre: {
-        type: string,
+        type: String,
         required: true,
         trim: true
     },
     email: {
-        type: string,
+        type: String,
         required:true,
         trim: true,
         unique: true
     },
     password: {
-        type: string,
+        type: String,
         required: true,
-        trim: ture
+        trim: true
     },
     registro: {
         type: Date,
