@@ -1,12 +1,12 @@
 //rutas para crear usurios
 const express = require('express');
 const router = express.Router();
-const usuarioControler =  require('../controller/usuarioController');
+const usuarioController =  require('../controller/usuarioController');
 
 //crear un usuario
 //api/usuarios
-router.post('/', () =>{
-    console.log('creando usuario');
-});
+router.post('/', 
+    usuarioController.crearUsuario
+)
 
 module.exports = router;
