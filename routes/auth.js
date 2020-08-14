@@ -11,6 +11,6 @@ router.post('/',
         check('password','El password debe ser minio de 6 caracteres').isLength({min:6})
     ],
     authController.autenticarUsuario
-)
+);
 
 module.exports = router;
