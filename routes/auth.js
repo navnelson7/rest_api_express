@@ -8,7 +8,7 @@ const authController = require('../controller/authController');
 router.post('/', 
     [
         check('email', 'Agregar un correo valido').isEmail(),
-        check('password','El password debe ser minio de 6 caracteres').isLength({min:6})
+        check('password','El password debe ser minimo de 6 caracteres').isLength({min:6})
     ],
     authController.autenticarUsuario
 );
