@@ -17,6 +17,27 @@ exports.autenticarUsuario = async (req, resp) =>{
         if(!usuario){
             return resp.status(400).json({ msg: 'El usuario no existe'});
         }
+        //revisar el password
+        const passCorrecto = await bcryptjs.compare(password, usuario.password);
+        if(!passCorrecto){
+            return resp.status(400).json({ msg: 'Password Incorrecto'});
+        }
+
+        //si todo es correcto 
+        //crear y firmar el JWT
+        const payload = {
+            usuario: {
+                id: usuario.id
+            }
+        };
+
+        jwt.sign(payload, process.env.SECRETA,{
+            expiresIn:3600
+        }, (error, token)=>{
+            if(error) throw error;
+            //mensaje de confirmacion
+            resp.json({token});
+        });
     } catch (error) {
         console.log(error);
     }
