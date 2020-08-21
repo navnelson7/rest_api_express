@@ -23,3 +23,13 @@ exports.crearProyecto = async (req, resp) => {
         resp.status(500).send("Hubo un error");
     }
 }
+//obtiene todos los proyectos del usuario actual
+exports.obtenerProyectos = async(req,resp) => {
+    try {
+        const proyectos = await Proyecto.find({creador: req.usuario.id}).sort({creado:-1});
+        resp.json({proyectos});
+    } catch (error) {
+        console.log(error);
+        resp.status(500).send('Hubo un error');
+    }
+}
