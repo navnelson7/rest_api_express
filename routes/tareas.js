@@ -8,7 +8,8 @@ const { check } = require('express-validator')
 //api/tareas
 router.post('/',
     auth, [
-        check('nombre', 'El nombres es obligatorio').notEmpty().isEmpty()
+        check('nombre', 'El nombre es obligatorio').notEmpty().isEmpty(),
+        check('proyecto', 'El proyecto es obligatorio').notEmpty().isEmpty()
     ],
     tareaController.crearTarea
 );
