@@ -1,33 +1,33 @@
 const Proyecto = require('../models/Proyecto');
-const { validationResult} = require('express-validator')
-exports.crearProyecto = async (req, resp) => {
+const { validationResult } = require('express-validator')
+exports.crearProyecto = async(req, resp) => {
 
 
-    //revisar si hay errores
-    const errores = validationResult(req);
-    if( !errores.isEmpty() ){
-        return resp.status(400).json({errores: errores.array()});
+        //revisar si hay errores
+        const errores = validationResult(req);
+        if (!errores.isEmpty()) {
+            return resp.status(400).json({ errores: errores.array() });
+        }
+        try {
+            //crear nuevo proyecto 
+            const proyecto = new Proyecto(req.body);
+
+            //guardar el creador via JWT
+            proyecto.creador = req.usuario.id;
+
+            //guardar el proyecto
+            await proyecto.save();
+            resp.json(proyecto);
+        } catch (error) {
+            console.log(error);
+            resp.status(500).send("Hubo un error");
+        }
     }
+    //obtiene todos los proyectos del usuario actual
+exports.obtenerProyectos = async(req, resp) => {
     try {
-        //crear nuevo proyecto 
-        const proyecto = new Proyecto(req.body);
-
-        //guardar el creador via JWT
-        proyecto.creador = req.usuario.id;
-
-        //guardar el proyecto
-        await proyecto.save();
-        resp.json(proyecto);
-    } catch (error) {
-        console.log(error);
-        resp.status(500).send("Hubo un error");
-    }
-}
-//obtiene todos los proyectos del usuario actual
-exports.obtenerProyectos = async(req,resp) => {
-    try {
-        const proyectos = await Proyecto.find({creador: req.usuario.id}).sort({creado:-1});
-        resp.json({proyectos});
+        const proyectos = await Proyecto.find({ creador: req.usuario.id }).sort({ creado: -1 });
+        resp.json({ proyectos });
     } catch (error) {
         console.log(error);
         resp.status(500).send('Hubo un error');
@@ -36,7 +36,8 @@ exports.obtenerProyectos = async(req,resp) => {
 
 
 //actualiza un proyecto
-exports.actualizaProyecto = async(req, resp) =>{
+exports.actualizaProyecto = async(req, resp) => {
+    const errores = validationResult(req);
     //revisando si hay errores
     if (!errores.isEmpty()) {
         return resp.status(400).json({ errores: errores.array() });
@@ -44,7 +45,7 @@ exports.actualizaProyecto = async(req, resp) =>{
     //extraer la informacion del rpoyecto
     const { nombre } = req.body;
     const nuevoProyecto = {};
-    if(nombre){
+    if (nombre) {
         nuevoProyecto.nombre = nombre;
     }
 
@@ -53,21 +54,21 @@ exports.actualizaProyecto = async(req, resp) =>{
         let proyecto = await Proyecto.findById(req.params.id);
 
         //revisar si el proyecto existe o no
-        if(!proyecto){
-            return resp.status(404).json({msg: 'Proyecto no encontrado'});
+        if (!proyecto) {
+            return resp.status(404).json({ msg: 'Proyecto no encontrado' });
         }
 
         //verificar el creador del proyecto
-        if(proyecto.creador.toString() !== req.usuario.id){
-            return resp.status(401).json({msg: 'No Autorizaado'});
+        if (proyecto.creador.toString() !== req.usuario.id) {
+            return resp.status(401).json({ msg: 'No Autorizaado' });
         }
 
 
         //actualizar
-        proyecto = await Proyecto.findByIdAndUpdate({ _id: req.params.id},{$set: nuevoProyecto},{new: true});
-        resp.json({proyecto});
-        
-    } catch(error) {
+        proyecto = await Proyecto.findByIdAndUpdate({ _id: req.params.id }, { $set: nuevoProyecto }, { new: true });
+        resp.json({ proyecto });
+
+    } catch (error) {
         console.log(error);
         resp.status(500).send('Error en el servidor');
     }
