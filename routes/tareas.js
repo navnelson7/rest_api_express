@@ -13,5 +13,10 @@ router.post('/',
     ],
     tareaController.crearTarea
 );
+//obtener tareas
+router.get('/',
+    auth,
+    tareaController.obtenerTareas
+);
 
 module.exports = router;
