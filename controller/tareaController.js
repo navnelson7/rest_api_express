@@ -113,12 +113,9 @@ exports.eliminarTarea = async(req, resp) => {
         if (existeproyecto.creador.toString() !== req.usuario.id) {
             return resp.status(401).json({ msg: "No autorizado" })
         }
-
-
-        //eliminar la taraea
-        await Tarea.findByIdAndRemove({ _id: req.params.id });
-        resp.json({ msg: 'Tarea Elminada' })
-
+        //elmina tarea
+        await Tarea.findOneAndRemove({ _id: req.params.id });
+        resp.json({ msg: 'Tarea Elminada' });
     } catch (error) {
         console.log(error);
         resp.status(500).send('Hubo un error');
